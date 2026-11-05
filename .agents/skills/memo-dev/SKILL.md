@@ -1,11 +1,11 @@
 ---
 name: memo-dev
-description: 维护 watchdog 内的备忘录业务子站。用户要求新增、删除、重命名或调整飞行部日常备忘录，修改备忘录页面、导航、分类、下载、Markdown 正文、图片附件、维护说明或索引时使用。皮燕子 Agent Skill 合集在独立仓库 piyanzi，不在本 Skill 范围。
+description: 维护 watchdog 内的备忘录业务子站。用户要求新增、删除、重命名或调整飞行部日常备忘录，修改备忘录页面、导航、下载、Markdown 正文、图片附件、维护说明或索引时使用。
 ---
 
 # 备忘录维护
 
-备忘录是 watchdog 下的独立静态子应用，用于查询飞行部日常工作记录。业务正文与项目级 Agent Skill（`.agents/skills/`）是两类内容，不能混放。Agent 业务 Skill 合集「皮燕子」在与 watchdog 同级的独立仓库 `piyanzi`。
+备忘录是 watchdog 下的独立静态子应用，用于查询飞行部日常工作记录。业务正文与项目级 Agent Skill（`.agents/skills/`）是两类内容，不能混放。
 
 ## 当前入口
 
@@ -14,7 +14,7 @@ description: 维护 watchdog 内的备忘录业务子站。用户要求新增、
 - 页面逻辑：`src/memo/site.ts`
 - 搜索规则：`src/memo/search.ts`
 - 页面索引：`src/memo/memos-data.ts`
-- 业务正文：`public/memo/memos/<数字>/MEMO.md`（人类看）
+- 业务正文：`public/memo/memos/<数字>/MEMO.md`
 - 模块规范：`public/memo/SPEC.md`
 - 人工索引：`public/memo/MEMO_INDEX.md`
 - 自动验证：`tests/smoke/memo.test.ts`
@@ -26,10 +26,8 @@ description: 维护 watchdog 内的备忘录业务子站。用户要求新增、
 - 不确定内容先确认，不把推测写成业务事实。
 - 附件放在所属备忘录的 `assets/` 内，正文使用相对路径引用。
 
-## 分类与下载
+## 下载
 
-- 每条索引必须带 `audience`：`human`（人类看）或 `agent`（皮燕子）。变量名仍用 `agent`，界面显示为「皮燕子」。
-- 页面提供「全部 / 人类看 / 皮燕子」筛选；搜索只在当前分类内进行。当前索引仅为人类看；`agent` 分类留给将来若再挂接条目时使用。
 - 每篇正文上方提供「下载 Markdown」；默认文件名为 `{name}.md`。
 - 可选 `downloadName` 指定下载文件名。
 
@@ -37,12 +35,11 @@ description: 维护 watchdog 内的备忘录业务子站。用户要求新增、
 
 1. 先读取目标 `MEMO.md` 全文和关联图片，不只修改用户摘出的片段。
 2. 修改正文时保持标准 frontmatter：`name`、`description`。
-3. 新增、删除、重命名或调整顺序时，同步 `src/memo/memos-data.ts`、`public/memo/SPEC.md` 和 `public/memo/MEMO_INDEX.md`，并填写 `audience`；按需填写 `downloadName`。
-4. 页面布局、搜索、分类或 Markdown 渲染变化时，同步检查 `index.html`、`site.css`、`search.ts` 和 `site.ts`。
+3. 新增、删除、重命名或调整顺序时，同步 `src/memo/memos-data.ts`、`public/memo/SPEC.md` 和 `public/memo/MEMO_INDEX.md`；按需填写 `downloadName`。
+4. 页面布局、搜索或 Markdown 渲染变化时，同步检查 `index.html`、`site.css`、`search.ts` 和 `site.ts`。
 5. 备忘录用户事实写入模块 `SPEC.md`，通用贡献说明使用仓库根 `CONTRIBUTING.md`，Agent 执行流程写入本 Skill。
 6. 不复制 Bootstrap、marked、许可证或第二套 Git；统一复用 watchdog 主仓库能力。
 7. Markdown、HTML、CSS 和 JavaScript 文本统一使用 UTF-8 无 BOM。
-8. 修改皮燕子 Skill 时打开 `repository/piyanzi`，不要在本仓库 `public/memo/memos/` 下重建合集。
 
 ## 验证
 
@@ -53,4 +50,4 @@ npm.cmd run build
 npx.cmd vitest run tests/smoke/memo.test.ts tests/smoke/html-assets-all.test.ts tests/smoke/javascript-syntax.test.ts
 ```
 
-收尾运行 `npm.cmd run verify`。真实页面的导航、分类筛选、下载、Markdown、表格和图片观感由 owner 人工确认。
+收尾运行 `npm.cmd run verify`。真实页面的导航、下载、Markdown、表格和图片观感由 owner 人工确认。

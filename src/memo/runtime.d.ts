@@ -1,9 +1,6 @@
-type MemoAudience = "human" | "agent";
-
 interface MemoItem {
   name: string;
   path: string;
-  audience: MemoAudience;
   downloadName?: string;
 }
 

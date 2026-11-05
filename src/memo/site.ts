@@ -1,21 +1,17 @@
 import "../tool/support-shell";
-import type { MemoAudience, MemoItem, MemoSearchResult } from "./models";
+import type { MemoItem, MemoSearchResult } from "./models";
 import * as searchEngine from "./search";
 import { memoItems as items } from "./memos-data";
-
-type AudienceFilter = "all" | MemoAudience;
 
 const list = requireElement("memoList", HTMLElement);
 const content = requireElement("content", HTMLElement);
 const sidebarMenu = requireElement("sidebarMenu", HTMLElement);
 const searchInput = requireElement("memoSearch", HTMLInputElement);
 const searchStatus = requireElement("searchStatus", HTMLElement);
-const audienceFilter = requireElement("audienceFilter", HTMLElement);
 const markdownCache = new Map<string, Promise<string>>();
 let renderVersion = 0;
 let searchVersion = 0;
 let searchTimer: number | undefined;
-let currentAudience: AudienceFilter = "all";
 let activeMarkdown = "";
 
 function requireElement<T extends HTMLElement>(id: string, Type: { new (): T }): T {
@@ -32,13 +28,8 @@ function hashName(): string {
   }
 }
 
-function visibleItems(): MemoItem[] {
-  if (currentAudience === "all") return items;
-  return items.filter((item) => item.audience === currentAudience);
-}
-
-function findItem(name?: string, pool = visibleItems()): MemoItem | undefined {
-  return pool.find((item) => item.name === name) || pool[0];
+function findItem(name?: string): MemoItem | undefined {
+  return items.find((item) => item.name === name) || items[0];
 }
 
 function basePath(path: string): string {
@@ -135,29 +126,16 @@ function highlightContent(value: string): void {
   content.querySelector<HTMLElement>(".search-highlight")?.scrollIntoView({ block: "center" });
 }
 
-function audienceLabel(audience: MemoAudience): string {
-  return audience === "agent" ? "皮燕子" : "人类看";
-}
-
 function createNavLink(item: MemoItem, snippet?: string): HTMLAnchorElement {
   const link = document.createElement("a");
   link.href = `#${encodeURIComponent(item.name)}`;
   link.className = `nav-link${snippet ? " search-result" : ""}`;
   link.dataset.memoName = item.name;
 
-  const head = document.createElement("span");
-  head.className = "memo-link-head";
-
   const title = document.createElement("span");
   title.className = snippet ? "search-result-name" : "memo-link-title";
   title.textContent = item.name;
-  head.appendChild(title);
-
-  const badge = document.createElement("span");
-  badge.className = `memo-audience-badge memo-audience-${item.audience}`;
-  badge.textContent = audienceLabel(item.audience);
-  head.appendChild(badge);
-  link.appendChild(head);
+  link.appendChild(title);
 
   if (snippet) {
     const summary = document.createElement("span");
@@ -180,25 +158,20 @@ function renderToolbar(item: MemoItem): HTMLElement {
     triggerDownload(downloadFileName(item), activeMarkdown);
   });
 
-  const badge = document.createElement("span");
-  badge.className = `memo-audience-badge memo-audience-${item.audience}`;
-  badge.textContent = audienceLabel(item.audience);
-
-  toolbar.append(downloadBtn, badge);
+  toolbar.append(downloadBtn);
   return toolbar;
 }
 
 function renderFullList(): void {
-  const pool = visibleItems();
-  if (!pool.length) {
+  if (!items.length) {
     const empty = document.createElement("div");
     empty.className = "search-empty";
-    empty.textContent = "当前分类下没有备忘录";
+    empty.textContent = "没有备忘录";
     list.replaceChildren(empty);
     return;
   }
-  list.replaceChildren(...pool.map((item) => createNavLink(item)));
-  markActive(hashName() || pool[0]?.name || "");
+  list.replaceChildren(...items.map((item) => createNavLink(item)));
+  markActive(hashName() || items[0]?.name || "");
 }
 
 function renderSearchResults(results: MemoSearchResult[]): void {
@@ -209,7 +182,7 @@ function renderSearchResults(results: MemoSearchResult[]): void {
     list.replaceChildren(empty);
     return;
   }
-  const byName = new Map(visibleItems().map((item) => [item.name, item]));
+  const byName = new Map(items.map((item) => [item.name, item]));
   list.replaceChildren(
     ...results.flatMap((result) => {
       const item = byName.get(result.name);
@@ -230,20 +203,11 @@ function closeMobileMenu(): void {
   bootstrap.Collapse.getOrCreateInstance(sidebarMenu, { toggle: false }).hide();
 }
 
-function syncAudienceButtons(): void {
-  audienceFilter.querySelectorAll<HTMLButtonElement>("[data-audience]").forEach((button) => {
-    const selected = button.dataset.audience === currentAudience;
-    button.classList.toggle("active", selected);
-    button.setAttribute("aria-pressed", selected ? "true" : "false");
-  });
-}
-
 async function loadMemo(name?: string, value = searchInput.value): Promise<void> {
-  const pool = visibleItems();
-  const item = findItem(name || hashName(), pool);
+  const item = findItem(name || hashName());
   if (!item) {
     activeMarkdown = "";
-    content.textContent = currentAudience === "all" ? "没有备忘录。" : "当前分类下没有备忘录。";
+    content.textContent = "没有备忘录。";
     return;
   }
 
@@ -281,9 +245,8 @@ function selectMemo(name: string): void {
 
 async function runSearch(value: string, version: number): Promise<void> {
   try {
-    const pool = visibleItems();
     const sources = await Promise.all(
-      pool.map(async (item) => ({
+      items.map(async (item) => ({
         name: item.name,
         path: item.path,
         markdown: await fetchMarkdown(item)
@@ -325,29 +288,6 @@ function handleSearchInput(): void {
   searchTimer = window.setTimeout(() => void runSearch(value, version), 120);
 }
 
-function applyAudienceFilter(next: AudienceFilter): void {
-  if (currentAudience === next) return;
-  currentAudience = next;
-  syncAudienceButtons();
-
-  const pool = visibleItems();
-  const currentName = hashName();
-  const stillVisible = pool.some((item) => item.name === currentName);
-  if (!stillVisible && pool[0]) {
-    history.replaceState(null, "", `#${encodeURIComponent(pool[0].name)}`);
-  } else if (!pool.length) {
-    history.replaceState(null, "", location.pathname + location.search);
-  }
-
-  const query = searchEngine.normalizeQuery(searchInput.value);
-  if (query) {
-    handleSearchInput();
-    return;
-  }
-  renderFullList();
-  void loadMemo(hashName(), "");
-}
-
 list.addEventListener("click", (event) => {
   const target = event.target;
   if (!(target instanceof Element)) return;
@@ -358,16 +298,7 @@ list.addEventListener("click", (event) => {
   selectMemo(name);
 });
 searchInput.addEventListener("input", handleSearchInput);
-audienceFilter.addEventListener("click", (event) => {
-  const target = event.target;
-  if (!(target instanceof Element)) return;
-  const button = target.closest<HTMLButtonElement>("[data-audience]");
-  const value = button?.dataset.audience;
-  if (value !== "all" && value !== "human" && value !== "agent") return;
-  applyAudienceFilter(value);
-});
 window.addEventListener("hashchange", () => void loadMemo());
 
-syncAudienceButtons();
 renderFullList();
 void loadMemo();

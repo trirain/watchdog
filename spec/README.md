@@ -42,7 +42,7 @@
 | 珠海皇帝 | session-bill-check | [开发](dev/session-bill-check/spec.md) | [操作](user/session-bill-check/manual.md) |
 | 自动点 OA 助手 | oa-read-helper | [开发](dev/oa-read-helper/spec.md) | [操作](user/oa-read-helper/manual.md) |
 
-备忘录和开发者页属于系统公共能力，不计作这 27 个工具；其工程边界见系统架构。备忘录业务正文在 `public/memo/memos/`，不复制进开发规格。项目级 Agent Skill 是维护方法，不代替业务规格；独立 `piyanzi` 仓库也不是看门狗的运行时依赖。
+备忘录和开发者页属于系统公共能力，不计作这 27 个工具；其工程边界见系统架构。备忘录业务正文在 `public/memo/memos/`，不复制进开发规格。项目级 Agent Skill 是维护方法，不代替业务规格。
 
 ## 文档能保证什么
 

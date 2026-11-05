@@ -50,7 +50,7 @@ Python 工作台：loopback HTTP → 单 worker/浏览器会话 → 人工认证
 
 ## 公共子系统
 
-**备忘录**：`public/memo/index.html` 为壳，`src/memo/memos-data.ts` 为导航索引，`search.ts` 负责正文检索，`site.ts` 负责分类、hash、Markdown 加载、高亮和单篇下载。正文与相对图片在 `public/memo/memos/`；模块完整规格在 `public/memo/SPEC.md`，人工索引在 `MEMO_INDEX.md`。当前索引为人类看条目，保留的 agent 分类不意味着已引入皮燕子合集。下载只保存单篇 Markdown，不自动携带图片。
+**备忘录**：`public/memo/index.html` 为壳，`src/memo/memos-data.ts` 为导航索引，`search.ts` 负责正文检索，`site.ts` 负责 hash、Markdown 加载、高亮和单篇下载。正文与相对图片在 `public/memo/memos/`；模块完整规格在 `public/memo/SPEC.md`，人工索引在 `MEMO_INDEX.md`。下载只保存单篇 Markdown，不自动携带图片。
 
 **开发者页**：`public/tool/developer.html` 和 `src/tool/developer.ts` 展示构建生成的 `skills-data.json` 与 `version.json`。Skill 来自 `.agents/skills`，两个手册阅读 Skill 被构建过滤。版本仅保存 Git 提交事实；不写机器路径、分支和构建时间。该页与首页提供同一份合并开发文档下载。
 

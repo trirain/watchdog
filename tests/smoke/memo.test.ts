@@ -31,8 +31,6 @@ describe("memo subsite", () => {
     const index = fs.readFileSync(resolveFromDist("memo", "MEMO_INDEX.md"), "utf8");
 
     items.forEach((item) => {
-      expect(["human", "agent"]).toContain(item.audience);
-
       const markdownPath = resolveFromDist("memo", item.path);
       expect(fs.existsSync(markdownPath), `missing memo Markdown: ${item.path}`).toBe(true);
 
@@ -70,23 +68,14 @@ describe("memo subsite", () => {
     expect(results[0].snippet).toContain("重航划转");
   });
 
-  it("requires downloadName for any agent-audience memo", () => {
-    const agents = loadPublishedItems().filter((item) => item.audience === "agent");
-    agents.forEach((item) => {
-      expect(item.downloadName, `${item.name} missing downloadName`).toBeTruthy();
-      expect(item.downloadName).toMatch(/^skill-.+\.md$/);
-    });
-  });
-
-  it("exposes audience filter and download controls in the page shell", () => {
+  it("exposes download controls in the page shell", () => {
     const html = fs.readFileSync(resolveFromDist("memo", "index.html"), "utf8");
-    expect(html).toContain('id="audienceFilter"');
-    expect(html).toContain('data-audience="all"');
-    expect(html).toContain('data-audience="human"');
-    expect(html).toContain('data-audience="agent"');
+    expect(html).toContain('id="memoList"');
+    expect(html).not.toContain("audienceFilter");
 
     const app = fs.readFileSync(resolveFromDist("memo", "app.js"), "utf8");
     expect(app).toContain("下载 Markdown");
     expect(app).toContain("downloadName");
   });
 });
+
