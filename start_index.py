@@ -1,6 +1,6 @@
 
 # 项目: watchdog
-# 定位: 本地优先的静态浏览器工具集合
+# 定位: 浏览器工具
 # 语言: Python + TypeScript
 # 页面: 原生 HTML + CSS + JavaScript
 # 构建: esbuild + tsx
