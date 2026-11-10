@@ -27,5 +27,6 @@ export const tools: ToolItem[] = [
     { name: "锁班乞丐", desc: "乞丐版，用playwright自动化模拟锁班。", entry: "lock-entry-helper", status: "done", category: "automation", homepageState: "cooling" },
     { name: "飞行经历查询（乞丐版）", desc: "playwright批量查询飞行时间+起落数、飞行经历+起落数、左座经历+起落数或全部数据", entry: "flight-stats-helper", status: "done", category: "automation", homepageState: "cooling" },
     { name: "珠海皇帝", desc: "核对场次表与账单表姓名人次", entry: "session-bill-check", status: "done", category: "light", homepageState: "cooling" },
-    { name: "自动点 OA 助手", desc: "自动处理可确认的 OA 已阅待办", entry: "oa-read-helper", status: "done", category: "automation", homepageState: "cooling" }
+    { name: "自动点 OA 助手", desc: "自动处理可确认的 OA 已阅待办", entry: "oa-read-helper", status: "done", category: "automation", homepageState: "cooling" },
+     { name: "休假锁班导出", desc: "按月份提取休假表数据，自动清洗锁班类型并标红高亮导出", entry: "leave-lock-export", status: "done", category: "light" }
 ];
