@@ -1,3 +1,4 @@
+import * as XLSX from 'xlsx-js-style';
 export interface LeaveRecord {
   empId: string;
   name: string;
