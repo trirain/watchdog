@@ -65,6 +65,7 @@ const pageEntries = [
   { source: "src/tool/app/language-validity-compare/main.ts", output: "tool/app/language-validity-compare/app", page: "tool/app/language-validity-compare/index.html" },
   { source: "src/tool/app/medical-exam-scheduler/main.ts", output: "tool/app/medical-exam-scheduler/app", page: "tool/app/medical-exam-scheduler/index.html" },
   { source: "src/tool/app/proof-king/main.ts", output: "tool/app/proof-king/app", page: "tool/app/proof-king/index.html" },
+  { source: "src/tool/app/leave-lock-export/main.ts", output: "tool/app/leave-lock-export/app", page: "tool/app/leave-lock-export/index.html" },
   { source: "src/tool/app/seasonal-learning/main.ts", output: "tool/app/seasonal-learning/app", page: "tool/app/seasonal-learning/index.html" },
   { source: "src/tool/app/session-bill-check/main.ts", output: "tool/app/session-bill-check/app", page: "tool/app/session-bill-check/index.html" },
   { source: "src/tool/app/text-joiner/main.ts", output: "tool/app/text-joiner/app", page: "tool/app/text-joiner/index.html" },
