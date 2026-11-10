@@ -1,8 +1,8 @@
 import { parseLeaveSheet, generateExportFile } from './logic';
 import { DEFAULT_TYPES } from './constants';
+import * as XLSX from 'xlsx-js-style';
 
-// 声明全局的 XLSX，避免 TS 报错
-declare const XLSX: any;
+
 
 let rawWorkbook: any = null;
 let typeList: string[] = DEFAULT_TYPES;
