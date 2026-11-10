@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>休假锁班导出</title>
+    <script src="../../../theme.js"></script>
+    <link rel="stylesheet" href="../../../libs/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../theme.css">
+    <style>
+        /* 页面专属微调 */
+        .page-shell { max-width: 800px; margin: 20px auto; padding: 20px; }
+        .panel { background: var(--watchdog-surface); border: 1px solid var(--watchdog-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; }
+        .status-box { margin-top: 15px; padding: 10px; background: var(--watchdog-surface-soft); border-radius: 4px; }
+    </style>
+</head>
+<body>
+<main class="page-shell">
+    <header style="margin-bottom: 20px;">
+        <h1>休假锁班导出</h1>
+        <p>提取休假表数据，自动匹配并清洗锁班类型，高亮人工核对</p>
+    </header>
+
+    <section class="panel">
+        <div class="form-group">
+            <label>1. 上传飞行员休假表 (.xlsx)</label>
+            <input type="file" id="leaveFile" class="form-control" accept=".xlsx,.xls">
+        </div>
+        
+        <div class="form-group">
+            <label>2. 上传模板文件获取标准类型 (.xlsx) <small>（可选，如果不上传则使用内置标准字典）</small></label>
+            <input type="file" id="templateFile" class="form-control" accept=".xlsx,.xls">
+        </div>
+        
+        <div class="form-group" id="monthSelectContainer" hidden>
+            <label>3. 选择要处理的月份</label>
+            <select id="monthSelect" class="form-select"></select>
+        </div>
+        
+        <div style="display: flex; gap: 10px; align-items: center; margin-top: 20px;">
+            <button id="exportBtn" class="btn btn-primary" disabled>生成并导出新表</button>
+            <span id="statusText" class="text-muted">请先上传文件</span>
+        </div>
+    </section>
+</main>
+
+<!-- 引入本地库和新页面的脚本 -->
+<script src="../../../libs/xlsx-js-style.min.js"></script>
+<script type="module" src="./main.ts"></script>
+</body>
+</html>
